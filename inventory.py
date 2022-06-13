@@ -8,8 +8,8 @@ langas = Tk()
 langas.title("Medžiagų sąrašas")
 langas.geometry("1080x720")
 my_tree = ttk.Treeview(langas)
-# Duomenų bazės sukūrimas
 
+# Duomenų bazės sukūrimas
 conn = sqlite3.connect('medziagos.db')
 c = conn.cursor()
 
@@ -21,14 +21,11 @@ c.execute("""CREATE TABLE IF NOT EXISTS medziagu_sarasas (
         kiekis text
         )""")
 
-
 # Funkcija atnaujinti duomenims:
 def refresh():
-    # Clean the data before displaying the new one.
     for data in my_tree.get_children():
         my_tree.delete(data)
-
-    # Get elements from table and display
+        
     data_from_table = sarasas()
     for data in data_from_table:
         my_tree.insert(parent='', index='end', iid=data, text="", values=(data), tag="orow")
@@ -58,9 +55,7 @@ def ivesti():
     pavadinimas.delete(0, END)
     kaina.delete(0, END)
     kiekis.delete(0, END)
-    # Refresh the table to display the newly inserted row.
     refresh()
-
 
 def sarasas():
     conn = sqlite3.connect('medziagos.db')
@@ -72,7 +67,6 @@ def sarasas():
     conn.close()
     return irasai
 
-
 def istrinti():
     conn = sqlite3.connect('medziagos.db')
     c = conn.cursor()
@@ -83,9 +77,7 @@ def istrinti():
 
     conn.commit()
     conn.close()
-    # Refresh the table to display the recently deleted row.
     refresh()
-
 
 def atnaujinti():
     conn = sqlite3.connect('medziagos.db')
@@ -109,7 +101,6 @@ def atnaujinti():
     conn.commit()
     conn.close()
     redagavimas.destroy()
-    # Refresh the table to display the updated row.
     refresh()
 
 def eksportuoti():
@@ -117,7 +108,6 @@ def eksportuoti():
     df = pd.read_sql_query("SELECT * FROM medziagu_sarasas", conn)
     df.to_csv('duomenys.csv', encoding="UTF-8", index=False)
     messagebox.showinfo("Informacija", "Duomenys eksportuoti sėkmingai")
-
 
 def redaguoti():
     global redagavimas
@@ -162,7 +152,6 @@ def redaguoti():
     atnaujinimo_mygtukas = Button(redagavimas, text="Išsaugoti įrašą", command=atnaujinti)
     atnaujinimo_mygtukas.grid(row=5, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
 
-
 # Text boxes
 kodas = Entry(langas, width=30)
 kodas.grid(row=0, column=1, padx=20, pady=(10, 0))
@@ -187,7 +176,6 @@ istrinimas_label = Label(langas, text="Pasirinkti Kodą", font=('Arial', 15))
 istrinimas_label.grid(row=5, column=0, pady=5)
 
 # Sukuriami mygtukai
-
 mygtukas_ivesti = tkinter.Button(
     langas, text="Įvesti", padx=10, pady=1, width=5,
     bd=3, font=('Arial', 15), bg="#63B8FF", command=ivesti)
@@ -208,18 +196,6 @@ mygtukas_eksportuoti = tkinter.Button(
     bd=3, font=('Arial', 15), bg="#e62e00", command=eksportuoti)
 mygtukas_eksportuoti.grid(row=18, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
 
-#duomenu_ivedimo_mygtukas = Button(langas, text="Įvesti", command=ivesti, bg="blue", fg="red")
-#duomenu_ivedimo_mygtukas.grid(row=6, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
-
-#saraso_mytgukas = Button(langas, text="Rodyti sąrasą", command=sarasas)
-#saraso_mytgukas.grid(row=7, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
-
-#istrinimo_mygtukas = Button(langas, text="Ištrinti įrasą", command=istrinti)
-#istrinimo_mygtukas.grid(row=10, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
-
-#redagavimo_mygtukas = Button(langas, text="Redaguoti įrašą", command=redaguoti)
-#redagavimo_mygtukas.grid(row=11, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
-
 # Treeview stulpelių pavadinimai ir stilius:
 style = ttk.Style()
 style.configure("Treeview.Heading", font=('Arial bold', 20))
@@ -239,15 +215,11 @@ my_tree.heading("Kiekis", text="Kiekis", anchor=W)
 for data in my_tree.get_children():
     my_tree.delete(data)
 
-# Read all the data from the database at the start of the
-# program and dispaly in the treeview.
 data_from_table = sarasas()
 for data in data_from_table:
     my_tree.insert(parent='', index='end', iid=data, text="", values=(data), tag="orow")
 
-# This puts treeview inside grid to be displayed.
 my_tree.tag_configure('orow', background='#EEEEEE', font=('Arial bold', 15))
-# How many pixels to pad widget, horizontally and vertically, outside v's borders. Padx and pady are for positioning, x is left/right, y is up/down.
 my_tree.grid(row=1, column=5, columnspan=4, rowspan=5, padx=10, pady=50)
 
 conn.commit()
