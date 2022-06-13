@@ -22,7 +22,7 @@ c.execute("""CREATE TABLE IF NOT EXISTS medziagu_sarasas (
         )""")
 
 
-# Function to refresh the data.
+# Funkcija atnaujinti duomenims:
 def refresh():
     # Clean the data before displaying the new one.
     for data in my_tree.get_children():
@@ -77,12 +77,6 @@ def istrinti():
     conn = sqlite3.connect('medziagos.db')
     c = conn.cursor()
 
-    # FIX: You had mistake here, you had before "WHERE oid = ", but it should be "WHERE kodas = ".
-    # This is because in the program you have a text field named "Pasirinkti ID", and there you
-    # enter the ID of the row, which corresponds to the value "kodas" in your case. So, in your
-    # SQL statements when you use WHERE clause you need to filter by "kodas" and not "oid".
-    # Similar mistake was down on line 93, where you had before "oid = :oid", but now I changed it
-    # to "kodas = :oid".
     c.execute("DELETE from medziagu_sarasas WHERE kodas = '" + istrinimas.get() + "'")
     istrinimas.delete(0, END)
     messagebox.showinfo("Informacija", "Duomenys ištrinti sėkmingai")
@@ -226,7 +220,7 @@ mygtukas_eksportuoti.grid(row=18, column=0, columnspan=2, pady=10, padx=10, ipad
 #redagavimo_mygtukas = Button(langas, text="Redaguoti įrašą", command=redaguoti)
 #redagavimo_mygtukas.grid(row=11, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
 
-# Treeview column names and styles
+# Treeview stulpelių pavadinimai ir stilius:
 style = ttk.Style()
 style.configure("Treeview.Heading", font=('Arial bold', 20))
 
@@ -241,7 +235,7 @@ my_tree.heading("Pavadinimas", text="Pavadinimas", anchor=W)
 my_tree.heading("Kaina", text="Kaina", anchor=W)
 my_tree.heading("Kiekis", text="Kiekis", anchor=W)
 
-# Clean everything from treeview.
+# Ištrinti viską iš treeview.
 for data in my_tree.get_children():
     my_tree.delete(data)
 
@@ -253,7 +247,7 @@ for data in data_from_table:
 
 # This puts treeview inside grid to be displayed.
 my_tree.tag_configure('orow', background='#EEEEEE', font=('Arial bold', 15))
-# padx and pady are for positioning, x is left/right, y is up/down
+# How many pixels to pad widget, horizontally and vertically, outside v's borders. Padx and pady are for positioning, x is left/right, y is up/down.
 my_tree.grid(row=1, column=5, columnspan=4, rowspan=5, padx=10, pady=50)
 
 conn.commit()
