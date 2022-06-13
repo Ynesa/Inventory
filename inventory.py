@@ -6,7 +6,7 @@ import pandas as pd
 
 langas = Tk()
 langas.title("Medžiagų sąrašas")
-langas.geometry("1080x720")  # Changes the sizee of the window
+langas.geometry("1080x720")
 my_tree = ttk.Treeview(langas)
 # Duomenų bazės sukūrimas
 
